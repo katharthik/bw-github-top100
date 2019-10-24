@@ -32,7 +32,7 @@ function Card(props: any, setCurrentRepo: any) {
           alt={item.description}
           src={item.owner.avatar_url}
         ></img>
-        <a className="repo-link" href={item.url}>
+        <a className="repo-link" href={item.html_url}>
           {item.name}
         </a>
         <hr></hr>
