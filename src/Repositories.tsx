@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useState } from "react";
 import {
   RepoInfo,
   CommitsInfo,
@@ -22,50 +22,39 @@ function closeOverlay() {
   overlay.style.display = "none";
   modal.style.display = "none";
 }
-function Card(props: any) {
-  return (
-    <div className="card">
-      <h3 className="repo-title">{props.rank + 1}</h3>
-      <img className="img" alt={props.description} src={props.img_url}></img>
-      <a className="repo-link" href={props.url}>
-        {props.name}
-      </a>
-      <hr></hr>
-      <div className="repo-info">
-        <button>★Star&nbsp;{props.star_count}</button>
-        <div
-          style={{ display: "inline", color: "#09d3ac", cursor: "pointer" }}
-          onClick={() => {
-            if (props.props.getRepoCommits(props.f_name).items.length === 0)
-              fetchCommits(props.f_name).then(resp => {
-                console.log(resp, "resp2");
-                props.props.saveRepoCommitInfo(resp, props.f_name);
-                props.setCurrentRepo(props.f_name);
-              });
-            openOverlay();
-            console.log("item");
-          }}
-        >
-          See commits
+function Card(props: any, setCurrentRepo: any) {
+  return props.items.slice(0, 100).map((item: any, index: number) => {
+    return (
+      <div className="card" key={item.name + index}>
+        <h3 className="repo-title">{index + 1}</h3>
+        <img
+          className="img"
+          alt={item.description}
+          src={item.owner.avatar_url}
+        ></img>
+        <a className="repo-link" href={item.url}>
+          {item.name}
+        </a>
+        <hr></hr>
+        <div className="repo-info">
+          <button>★Star&nbsp;{item.stargazers_count}</button>
+          <div
+            style={{ display: "inline", color: "#09d3ac", cursor: "pointer" }}
+            onClick={() => {
+              if (props.getRepoCommits(item.full_name).items.length === 0)
+                fetchCommits(item.full_name).then(resp => {
+                  props.saveRepoCommitInfo(resp, item.full_name);
+                  setCurrentRepo(item.full_name);
+                });
+              openOverlay();
+            }}
+          >
+            See commits
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function cardList(props: any, card: any, rank: Number, setCurrentRepo: any) {
-  return (
-    <Card
-      rank={rank}
-      img_url={card.owner.avatar_url}
-      name={card.name}
-      star_count={card.stargazers_count}
-      key={rank}
-      f_name={card.full_name}
-      props={props}
-      setCurrentRepo={setCurrentRepo}
-    />
-  );
+    );
+  });
 }
 
 export const RepositoriesFn = (props: {
@@ -74,19 +63,11 @@ export const RepositoriesFn = (props: {
   saveRepoCommitInfo: (info: CommitsInfo, repoName: string) => void;
 }) => {
   const [currentRepo, setCurrentRepo] = useState("");
-  const [commits, setCommits] = useState([]);
-  useEffect(() => {
-    if (currentRepo) console.log(props.getRepoCommits(currentRepo));
-  }, [currentRepo]);
   if (!props.items) return <div>'Items not provided'</div>;
 
   return (
     <div>
-      <div className="cards">
-        {props.items
-          .slice(0, 100)
-          .map((item, index) => cardList(props, item, index, setCurrentRepo))}
-      </div>
+      <div className="cards">{Card(props, setCurrentRepo)}</div>
       <div id="commits-overlay" className="commits-view-overlay"></div>
       <div className="modal" id="modal">
         <div className="overlay-header">
@@ -108,7 +89,6 @@ export const RepositoriesFn = (props: {
               </div>
               <span className="commit-message">
                 >&nbsp;{commit.commit.message}
-                {console.log(commit, "THIS: ")}
               </span>
               <br />
             </div>
