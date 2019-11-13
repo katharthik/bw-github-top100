@@ -1,4 +1,15 @@
-My notes are at the end of this file. This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A single-page web app that uses the Github REST API v3 to display a list of the top 100 most starred Github repositories
+including a list of the commits made in the last 24 hours
+
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## TODO (Karthik)
+
+- Create a Overlay(Modal) component for reusability
+- Write more semantic unit tests
+- Style the commit messages to be more intuitive
+- Take care of warnings
+- Better type definitions
 
 ## Available Scripts
 
@@ -42,11 +53,3 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
-
-## TODO (Karthik)
-
-- Create a Overlay(Modal) component for reusability
-- Write more semantic unit tests
-- Style the commit messages to be more intuitive
-- Take care of warnings
-- Better type definitions
